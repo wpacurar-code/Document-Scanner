@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Scanner</title>
+</head>
+<body>
+
+<h1>Document Scanner</h1>
+<p>Greetings</p>
+
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="file" name="uploaded_file" accept="image/*">
+    <button type="submit">Upload</button>
+</form>
+
+{% if image %}
+<h2>Original</h2>
+<img src="data:image/png;base64,{{ image }}" style="max-width: 500px;">
+{% endif %}
+
+{% if edged %}
+<h2>Processed</h2>
+<img src="data:image/png;base64,{{ edged }}" style="max-width: 500px;">
+{% endif %}
+
+</body>
+</html>
