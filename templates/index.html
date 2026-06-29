@@ -17,14 +17,31 @@
     <button type="submit">Upload</button>
 </form>
 
-{% if image %}
+{% if originalImage %}
 <h2>Original</h2>
-<img src="data:image/png;base64,{{ image }}" style="max-width: 500px;">
+<img src="data:image/png;base64,{{ originalImage }}" style="max-width: 500px;">
 {% endif %}
 
-{% if edged %}
-<h2>Processed</h2>
-<img src="data:image/png;base64,{{ edged }}" style="max-width: 500px;">
+{% if edgedImage %}
+<h2>Edged</h2>
+<img src="data:image/png;base64,{{ edgedImage }}" style="max-width: 500px;">
+{% endif %}
+
+{% if contouredImage %}
+<h2>Contours</h2>
+<img src="data:image/png;base64,{{ contouredImage }}" style="max-width: 500px;">
+{% endif %}
+
+{% if warpedImage %}
+<h2>Warped</h2>
+
+<p>Click the image to download it:</p>
+
+<a href="data:image/png;base64,{{ warpedImage }}" download="scanned_document.png">
+    <img src="data:image/png;base64,{{ warpedImage }}"
+         alt="Warped document"
+         style="max-width: 500px;">
+</a>
 {% endif %}
 
 </body>
