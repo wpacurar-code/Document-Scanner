@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Document Scanner</title>
+    <link rel="stylesheet" href="../static/css/index.css">
 </head>
 <body>
 
@@ -25,6 +26,10 @@
 {% if edgedImage %}
 <h2>Edged</h2>
 <img src="data:image/png;base64,{{ edgedImage }}" style="max-width: 500px;">
+{% endif %}
+
+{% if error %}
+<h2 class="error">{{ error }}</h2>
 {% endif %}
 
 {% if contouredImage %}

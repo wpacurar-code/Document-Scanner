@@ -16,6 +16,8 @@ def image_encoder(img):
 
 
 def process_file(uploaded_image):
+    # Source - https://pyimagesearch.com/2014/09/01/build-kick-ass-mobile-document-scanner-just-5-minutes/
+
     # resize image
     file_bytes = np.frombuffer(uploaded_image.read(), np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
@@ -38,16 +40,19 @@ def process_file(uploaded_image):
     cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
 
     # loop over the contours
+    screenCnt = None
     for c in cnts:
         # approximate the contour
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        # if our approximated contour has four points, then we
-        # can assume that we have found our screen
-        # FIXME: bad picture creates error here
+        # 4 points = found screen
         if len(approx) == 4:
             screenCnt = approx
             break
+
+    if screenCnt is None:
+        error_message = "Could not detect document outline"
+        return originalImage, edgedImage, None, None, error_message
 
     # encode
     contouredImage = image_encoder(cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2))
@@ -58,7 +63,7 @@ def process_file(uploaded_image):
     # encode
     warpedImage = image_encoder(warp)
 
-    return originalImage, edgedImage, contouredImage, warpedImage
+    return originalImage, edgedImage, contouredImage, warpedImage, None
 
 
 def index(request):
@@ -70,12 +75,13 @@ def index(request):
             return render(request, "index.html")
 
         # call process function and assign vars
-        originalImage, edgedImage, contouredImage, warpedImage = process_file(uploaded_file)
+        originalImage, edgedImage, contouredImage, warpedImage, error = process_file(uploaded_file)
 
         return render(request, "index.html", {
             "originalImage": originalImage,
             "edgedImage": edgedImage,
             "contouredImage": contouredImage,
             "warpedImage": warpedImage,
+            "error": error,
         })
     return render(request, "index.html")
