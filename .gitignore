@@ -25,3 +25,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Env variants
+.env.*
+!.env.example
+
+# VS Code
+.vscode/

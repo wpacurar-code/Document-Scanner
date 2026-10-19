@@ -7,3 +7,6 @@ db.sqlite3
 .gitignore
 Dockerfile
 .dockerignore
+.env
+.env.*
+media/

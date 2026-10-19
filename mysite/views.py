@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 # image processing
 from pyimagesearch.transform import four_point_transform
@@ -16,14 +15,16 @@ def image_encoder(img):
 
 
 def process_file(uploaded_image):
-    # Source - https://pyimagesearch.com/2014/09/01/build-kick-ass-mobile-document-scanner-just-5-minutes/
+    # Inspiration source - https://pyimagesearch.com/2014/09/01/build-kick-ass-mobile-document-scanner-just-5-minutes/
 
     # resize image
     file_bytes = np.frombuffer(uploaded_image.read(), np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-    ratio = image.shape[0] / 500.0
+    if image is None:
+        return None, None, None, None, "Uploaded file is not a valid image"
     orig = image.copy()
     image = imutils.resize(image, height=500)
+    ratio = orig.shape[0] / image.shape[0]
 
     # convert the image to grayscale, blur it, and find edges
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -72,7 +73,7 @@ def index(request):
 
         # if nothing is uploaded
         if uploaded_file is None:
-            return render(request, "index.html")
+            return render(request, "index.html", {"error": "No file was uploaded"})
 
         # call process function and assign vars
         originalImage, edgedImage, contouredImage, warpedImage, error = process_file(uploaded_file)
